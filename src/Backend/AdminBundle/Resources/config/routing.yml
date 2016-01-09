@@ -1,0 +1,70 @@
+backend_admin_homepage:
+    path:     /admin
+    defaults: { _controller: BackendAdminBundle:Gallery:gallery }
+
+# Gallery
+backend_admin_gallery_display:
+    path:     /admin/gallery/{page}
+    defaults: { _controller: BackendAdminBundle:Gallery:displayGallery, page: 1 }
+    requirements:
+        _method: GET
+        page: \d+
+
+backend_admin_gallery_default:
+    path:     /admin/gallery
+    defaults: { _controller: BackendAdminBundle:Gallery:displayGallery }
+
+backend_admin_gallery_additem:
+    path:     /admin/gallery/add/
+    defaults: { _controller: BackendAdminBundle:Gallery:addItemGallery }
+
+backend_admin_gallery_delete:
+    path:     /admin/gallery/delete/{id}
+    defaults: { _controller: BackendAdminBundle:Gallery:deleteItemGallery }
+    requirements:
+        _method: GET
+        page: \d+
+
+
+
+# Projects
+backend_admin_projects_display:
+    path:     /admin/projects/{category}/{page}
+    defaults: { _controller: BackendAdminBundle:Project:projectGallery, page: 1, category: all }
+    requirements:
+        _method: GET
+        page: \d+
+
+backend_admin_projects_default:
+    path:     /admin/projects
+    defaults: { _controller: BackendAdminBundle:Project:projectGallery }
+
+backend_admin_project_add:
+    path:     /admin/project/add/
+    defaults: { _controller: BackendAdminBundle:Project:addProject }
+
+backend_admin_project_update:
+    path:     /admin/project/update/{id}
+    defaults: { _controller: BackendAdminBundle:Project:updateProject }
+    requirements:
+        page: \d+
+
+backend_admin_project_delete:
+    path:     /admin/project/delete/{id}
+    defaults: { _controller: BackendAdminBundle:Project:deleteProject }
+    requirements:
+        _method: GET
+        page: \d+
+
+
+#API
+backend_admin_api_projects:
+    path:     /api/projects/{category}
+    defaults: { _controller: BackendAdminBundle:API:getProjects, category: all }
+    requirements:
+        _method: GET
+
+# Profile
+# backend_admin_projectspage:
+#     path:     /admin/projects
+#     defaults: { _controller: BackendAdminBundle:Gallery:gallery }

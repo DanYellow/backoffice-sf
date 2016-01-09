@@ -1,0 +1,23 @@
+{% macro galleryelmt(galleryItem) %}
+{% set imgCompletePath = app.request.scheme ~ '://' ~ app.request.host ~ ':' ~ app.request.port ~ '/' ~ galleryItem.getWebPath %}
+  <li class="list-gallery__elmt" tabindex="1">
+    <div class="list-gallery__elmt-container">
+        <ul class="toolbar list-unstyled">
+            <li>
+                <button 
+                    class="reset-btn distruptive" 
+                    data-toggle="modal" 
+                    data-target="#removeItemGalleryModal" 
+                    data-img-to-delete-src="{{ imgCompletePath }}" 
+                    data-title-modal="Souhaitez-vous supprimer cette image ?" data-occurences-image="{{ galleryItem.projects|length }}"
+                    data-id="{{ galleryItem.id }}">
+                    Supprimer
+                </button>
+            </li> 
+        </ul>
+    </div>
+
+    <figure><img src="{{ imgCompletePath }}" alt="{{ galleryItem.path }}" /></figure>
+  </li>
+{% endmacro %}
+

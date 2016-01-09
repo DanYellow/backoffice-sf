@@ -1,0 +1,14 @@
+backend_admin:
+    resource: "@BackendAdminBundle/Resources/config/routing.yml"
+    prefix:   /
+# http://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/annotations/routing.html#activation
+
+fos_user:
+    resource: "@FOSUserBundle/Resources/config/routing/all.xml"
+
+_liip_imagine:
+    resource: "@LiipImagineBundle/Resources/config/routing.xml"
+
+homepage:
+    pattern:   /
+    defaults:  { _controller: FOSUserBundle:Security:login }

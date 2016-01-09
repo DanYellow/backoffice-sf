@@ -1,0 +1,38 @@
+{% extends "BackendAdminBundle::layout.html.twig" %}
+
+{% block title %}Page de connexion{% endblock %}
+
+{% trans_default_domain 'FOSUserBundle' %}
+
+{% block content %}
+    <div class="sign-in {% if error %}error{% endif %}" >
+        <header>
+            <h2>Accès backoffice</h2>
+            <h4>{{ website_name }}</h4>
+        </header>
+        {% if error %}
+            <div class="alert alert-danger" role="alert">
+              <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+              <span class="sr-only">Erreur : </span>
+              {{ error.messageKey|trans(error.messageData, 'security') }}
+            </div>
+        {% endif %}
+        <form action="{{ path("fos_user_security_check") }}" method="post" novalidate >
+            <legend class="sr-only">Formulaire accès backoffice</legend>
+            
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
+            <div class="form-element">
+                <label for="user_email">{{ 'security.login.username'|trans }}</label>
+                <input type="text" id="username" name="_username" value="{{ last_username }}" required="required" placeholder="Nom d'utilisateur" />
+            </div>
+            <div class="form-element">
+                <label for="user_password">{{ 'security.login.password'|trans }} <a href="#">J'ai perdu mon mot de passe</a></label>
+                <input type="password" id="user_password" name="_password" required="required" placeholder="Mot de passe" />
+            </div>
+
+            <div class="form-element">
+                <input type="submit" id="_submit" name="_submit" value="{{ 'security.login.submit'|trans }}" />
+            </div>
+        </form>
+    </div> 
+{% endblock %}

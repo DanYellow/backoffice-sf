@@ -1,0 +1,69 @@
+{% extends "BackendAdminBundle::layout.connected.html.twig" %}
+
+{% import "BackendAdminBundle:Macros:menuheader.html.twig" as menuheader %}
+
+{% import "BackendAdminBundle:Macros:gallery.html.twig" as gallery %}
+
+
+{% block titleTab %}Galerie{% endblock %}
+
+{% block sectiontitle %} Galerie {% endblock %}
+{% block menuHeader %} {{ menuheader.menuheader("Bibiliothèque d'images", [{"name": "Ajouter une image", "url": path("backend_admin_gallery_additem")}]) }} {% endblock %}
+{% block headerextras %}{% endblock %}
+
+{% block main %}
+
+
+{% for flashMessage in app.session.flashBag.get('successMessage') %}
+  <div class="alert alert-success alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      {{ flashMessage }}
+  </div>
+{% endfor %}
+
+{% for flashMessage in app.session.flashBag.get('errorMessage') %}
+  <div class="alert alert-danger alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      {{ flashMessage | raw }}
+  </div>
+{% endfor %}
+
+<ul class="list-unstyled list-gallery">
+  {% for galleryItem in galleryItems %}
+    {{ gallery.galleryelmt(galleryItem) }}
+  {% else %}
+    <div class="alert alert-info" role="alert">
+      <p>Vous n'avez pas d'images pour le moment</p>
+      <p>
+        <a class="btn btn-default btn-sm dropdown-toggle" href="{{ path("backend_admin_gallery_additem") }}">
+          Ajouter une image 
+        </a>
+      </p>
+    </div>
+  {% endfor %}
+</ul>
+
+{% include "BackendAdminBundle:Pagination:pagination.html.twig" with {'route': 'backend_admin_gallery_display'} %}
+
+<div class="modal fade" tabindex="-1" role="dialog" id="removeItemGalleryModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" data-title>Modal title</h4>
+        <small data-text-image-occurences data-default-text="Image utilisée dans __nb__ projet(s)"></small>
+      </div>
+      <div class="modal-body">
+        <figure class="imgToDelete__container">
+            <img src="" class="imgToDelete" />
+        </figure>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Non</button>
+        <a href="{{ path('backend_admin_gallery_delete', { 'id': "__id__" }) }}" class="btn btn-danger" title="Supprimer image" data-delete-link>Oui</a>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+{% endblock %}

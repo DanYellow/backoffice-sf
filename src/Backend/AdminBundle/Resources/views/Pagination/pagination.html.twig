@@ -1,0 +1,12 @@
+<nav id="pagination">
+  <ul class="list-unstyled">
+    {% for i in 1..nbPages %}
+      <li>
+        <a href="{{ url(route, { 'page': i }) }}" 
+            {% if app.request.attributes.get('page') == i %} class="active" {% endif %}>
+          {{ i }}
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+</nav>

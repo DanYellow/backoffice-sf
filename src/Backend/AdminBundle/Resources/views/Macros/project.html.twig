@@ -1,0 +1,30 @@
+{% macro projectelmt(project) %}
+  {% set projectGalleryFirstItem = project.galleryItems[0] %}
+  {% set imgCompletePath = projectGalleryFirstItem.getWebPath %}
+  <li class="list-gallery__elmt {{ project.category.slugName }}" tabindex="1">
+    <div class="list-gallery__elmt-container">
+        <ul class="list-unstyled infos">
+            <li>{{ project.title }}</li>
+            <li>{{ project.category.name }}</li> 
+            <li>{{ project.galleryItems|length }} image(s)</li>
+        </ul>
+
+        <ul class="toolbar list-unstyled">
+            <li><a href="{{ path('backend_admin_project_update', { 'id': project.id }) }}" title="Modifier le projet {{ project.title }}">Modifier</a></li>
+            <li><button 
+                    class="reset-btn distruptive" 
+                    data-toggle="modal" 
+                    data-target="#removeItemGalleryModal" 
+                    data-img-to-delete-src="{{ imgCompletePath }}" 
+                    data-title-modal="Souhaitez-vous supprimer ce projet ?"
+                    data-id="{{ project.id }}"
+                >Supprimer</button></li> 
+        </ul>
+    </div>
+
+    {% if project.galleryItems[0] is defined %}
+        
+        <figure><img src="{{ imgCompletePath | imagine_filter('gallery_thumb') }}" alt="{{ projectGalleryFirstItem.path }}" /></figure>
+    {% endif %}
+  </li>
+{% endmacro %}

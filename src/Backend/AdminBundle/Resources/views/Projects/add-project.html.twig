@@ -1,0 +1,80 @@
+{% extends "BackendAdminBundle::layout.connected.html.twig" %}
+
+{% import "BackendAdminBundle:Macros:menuheader.html.twig" as menuheader %}
+
+{% form_theme form "BackendAdminBundle:form:form_errors.html.twig" %}
+
+{% block titleTab %}Galerie{% endblock %}
+
+
+{% block sectiontitle %} 
+  {% if (app.request.attributes.get('_route') == "backend_admin_project_update") %}
+    Mettre à jour le projet {{ form.title.vars.value }}
+  {% else %}
+    Ajouter un nouveau projet
+  {% endif %}
+
+{% endblock %}
+{% block menuHeader %} {{ menuheader.menuheader("", [{name: "Retour", url: path("backend_admin_projects_display")}]) }} {% endblock %}
+{% block headerextras %}{% endblock %}
+
+{% block main %}
+  <div class="row">
+  
+
+    <form method="post" {{ form_enctype(form) }} class="col-xs-12" novalidate="novalidate" 
+          action={{ (app.request.attributes.get('_route') == "backend_admin_project_update") ? path('backend_admin_project_update', { 'id': app.request.attributes.get('id') }) : path('backend_admin_project_add') }}>
+        {{ form_widget(form._token) }}
+
+        {{ form_errors(form) }}
+        {{ form_errors(form.title) }}
+        <div class="form-element">
+            <label for="{{ form.title.vars.id }}">Nom du projet</label>
+            {{ form_widget(form.title) }}
+        </div>
+        <div class="form-element">
+            <label for="{{ form.description.vars.id }}">Description</label>
+            {{ form_widget(form.description, {'attr': {'rows': 5}}) }}
+        </div>
+        <div class="form-element">
+            <label for="{{ form.category.vars.id }}">Sélectionner catégorie</label>
+            {{ form_widget(form.category) }}
+        </div>
+        <div class="form-element">
+            <label for="{{ form.isOnline.vars.id }}">Mettre en ligne</label>
+            {{ form_widget(form.isOnline) }}
+        </div> 
+        <div class="form-element">
+            <button type="button" class="btn-select-images" data-toggle="modal" data-target="#galleryModal">
+           Sélectionner images
+           </button>
+        </div>
+
+
+        <div class="form-element list-images-selected__container">
+            <div data-bind="visible: projectImages().length == 0" class="empty-message__container">
+                <span class="empty-message">
+                    Il n'y a pas d'images pour ce projet
+                </span>
+            </div>
+             <ul data-hidden-input-id="#projectImagesId" 
+                 class="row list-images-selected list-unstyled no-margin" 
+                 data-bind="foreach: projectImages"
+                 id="images-project">
+                <li class="col-md-3 col-sm-6 list-images-selected__item">
+                  <button class="reset-btn" type="button" data-bind="attr: { 'data-gallery-item': JSON.stringify($data) }">&times;</button>
+                    <figure>
+                      <img data-bind="attr: { src: $data.webPath }" alt="">
+                    </figure>
+              </li>
+             </ul>
+            {{ form_widget(form.galleryItemsId, { 'id': 'projectImagesId' }) }}
+         </div>
+        
+        <div class="form-element">
+          {{ form_widget(form.save) }}
+        </div>
+    </form>
+  </div>
+  {% include "BackendAdminBundle:Includes:modal-gallery.html.twig" %} 
+{% endblock %}

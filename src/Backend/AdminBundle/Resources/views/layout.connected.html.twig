@@ -1,0 +1,22 @@
+{% extends "BackendAdminBundle::layout.html.twig" %}
+ 
+{% block content %}
+    <div class="row main-container stack-xs">
+        {% include "BackendAdminBundle:Includes:menu.html.twig" %}
+        <section class="col-xs-12 col-md-9">
+            <div id="main-wrapper">
+                <header>
+                    <h3 class="semibold">
+                        {% block sectiontitle %}Put a title plz{% endblock %}
+                    </h3>
+                    {% block menuHeader %}{% endblock %}
+                    {% block headerextras %}{% endblock %}
+                    
+                </header>
+                {% block main %}{% endblock %}
+                
+            </div>
+        </section>
+           
+    </div> 
+{% endblock %}

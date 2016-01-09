@@ -1,0 +1,14 @@
+{% block form_errors %}
+    {% spaceless %}
+        {% if errors|length > 0 %}
+          {% for error in errors %}
+            <div class="alert alert-danger" role="alert">
+              <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+              <span class="sr-only">Erreur :</span>
+              {{ error.message }}
+            </div>
+          {% endfor %}
+        {% endif %}
+    {% endspaceless %}
+{% endblock form_errors %}
+

@@ -1,0 +1,38 @@
+{% extends "BackendAdminBundle::layout.connected.html.twig" %}
+
+{% import "BackendAdminBundle:Macros:menuheader.html.twig" as menuheader %}
+
+{% form_theme form "BackendAdminBundle:form:form_errors.html.twig" %}
+
+
+{% block sectiontitle %} Ajouter une nouvelle image {% endblock %}
+{% block menuHeader %} {{ menuheader.menuheader("", [{name: "Retour", url: path("backend_admin_gallery_default")}]) }} {% endblock %}
+{% block headerextras %}{% endblock %}
+
+{% block main %}
+  <div class="row">
+  
+  <form method="post" {{ form_enctype(form) }} class="col-xs-12" novalidate="novalidate">
+      {{ form_errors(form) }}
+  {{ form_errors(form.name) }}
+  {{ form_errors(form.file) }}
+      <div class="form-element">
+          <label for="{{ form.name.vars.id }}">Nom de l'image (facultatif)</label>
+          {{ form_widget(form.name) }}
+      </div> 
+      <div class="form-element">
+        <label for="{{ form.file.vars.id }}">Sélectionner une image</label>
+        <div class="inputfile__container">
+          {{ form_widget(form.file, {'attr': {'data-input-file': 'fakeinput-file' }}) }}
+           
+          <p class="fakeinput-file">Choisir...</p>
+        </div>
+      </div>
+      {{ form_widget(form._token) }}
+      <div class="form-element">
+        <input type="submit" value="Ajouter" name="{{ form.save.vars.name }}">
+      </div>
+
+   </form>
+  </div>
+{% endblock %}

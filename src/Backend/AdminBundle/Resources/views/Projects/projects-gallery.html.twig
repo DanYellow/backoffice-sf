@@ -1,0 +1,87 @@
+{% extends "BackendAdminBundle::layout.connected.html.twig" %}
+
+{% import "BackendAdminBundle:Macros:menuheader.html.twig" as menuheader %}
+
+{% import "BackendAdminBundle:Macros:project.html.twig" as projectTpl %}
+
+{% block titleTab %}Liste des projets{% endblock %}
+{% block sectiontitle %} Liste des projets {% endblock %}
+{% block menuHeader %} 
+  {{ menuheader.menuheader(null, [{"name": "Ajouter un projet", "url": path("backend_admin_project_add")}]) }}
+{% endblock %}
+
+{% block headerextras %}
+<div class="filters__container">
+    <p class="h4">Filtres</p>
+    <ul class="filters list-unstyled">
+      <li>
+      
+        <a href="{{ path('backend_admin_projects_display') }}" 
+          {% if app.request.attributes.get('category') == "all" %} 
+            class="active"
+          {% endif %} data-filter-name="all">Tout</a>
+      </li>
+      {% for category in categories %}
+        <li>
+          <a  href="{{ path('backend_admin_projects_display', { 'category': category.slugName }) }}" 
+              data-filter-name="{{ category.slugName }}"
+              {% if category.slugName == app.request.attributes.get('category') %}
+                class="active"
+              {% endif %}
+          >{{ category.name }}</a>
+        </li>
+      {% endfor %}
+    </ul>
+</div>
+{% endblock %}
+
+{% block main %}
+
+
+{% for flashMessage in app.session.flashBag.get('successMessage') %}
+  <div class="alert alert-success alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      {{ flashMessage | raw }}
+  </div>
+{% endfor %}
+
+
+<ul class="list-unstyled list-gallery">
+  {% for project in projects %}
+    {{ projectTpl.projectelmt(project) }}
+  {% else %}
+    <div class="alert alert-info" role="alert">
+      <p>Vous n'avez pas de projets pour le moment</p>
+      <p>
+        <a class="btn btn-default btn-sm dropdown-toggle" href="{{ path("backend_admin_project_add") }}">
+          Ajouter un projet
+        </a>
+      </p>
+    </div>
+  {% endfor %}
+</ul>
+
+{% include "BackendAdminBundle:Pagination:pagination.html.twig" with {'route': 'backend_admin_projects_display'} %}
+
+<div class="modal fade" tabindex="-1" role="dialog" id="removeItemGalleryModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" data-title>Modal title</h4>
+        <small data-text-image-occurences data-default-text="Image utilisée dans __nb__ projet(s)"></small>
+      </div>
+      <div class="modal-body">
+        <figure class="imgToDelete__container">
+            <img src="" class="imgToDelete" />
+        </figure>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Non</button>
+        <a href="{{ path('backend_admin_project_delete', { 'id': "__id__" }) }}" class="btn btn-danger" title="Supprimer image" data-delete-link>Oui</a>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+{% endblock %}

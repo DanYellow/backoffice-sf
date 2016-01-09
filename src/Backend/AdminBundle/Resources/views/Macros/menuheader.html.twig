@@ -1,0 +1,18 @@
+{% macro menuheader(title, links) %}
+    <nav>
+        <ul class="menu-header">
+        	{% if title %}
+            	<li>{{ title }}</li>
+            {% endif %}
+            {% for link in links %}               
+                <li>
+                    {% if link.url %}
+                        <a href="{{ link.url }}">{{ link.name }}</a>
+                    {% else %}
+                        {{ link.name }}
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    </nav>
+{% endmacro %}
