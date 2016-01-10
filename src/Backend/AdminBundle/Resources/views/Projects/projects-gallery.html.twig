@@ -4,7 +4,12 @@
 
 {% import "BackendAdminBundle:Macros:project.html.twig" as projectTpl %}
 
-{% block titleTab %}Liste des projets{% endblock %}
+{% block titleTab %}Liste des projets
+  {% if app.request.attributes.get('category') != "all" %} 
+  - Catégorie : {{ app.request.attributes.get('category') }}
+  {% endif %} 
+
+{% endblock %}
 {% block sectiontitle %} Liste des projets {% endblock %}
 {% block menuHeader %} 
   {{ menuheader.menuheader(null, [{"name": "Ajouter un projet", "url": path("backend_admin_project_add")}]) }}

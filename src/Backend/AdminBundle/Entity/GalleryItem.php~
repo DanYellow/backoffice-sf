@@ -10,6 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 
 use Backend\AdminBundle\Entity\Project as Project;
+use Backend\AdminBundle\Entity\GalleryItemOrder as GalleryItemOrder;
 
 /**
  * GalleryItem
@@ -65,10 +66,9 @@ class GalleryItem
 
 
     /**
-     * @ORM\ManyToMany(targetEntity="Project", inversedBy="galleryItems")
-     * @ORM\JoinTable(name="projects_galleryitems")
+     * @ORM\OneToMany(targetEntity="GalleryItemOrder", mappedBy="galleryItem", cascade={"all"})
      */
-    private $projects;
+    private $galleryItemsOrder;
 
 
 
@@ -322,4 +322,62 @@ class GalleryItem
         }
     }
 
+
+    /**
+     * Set order
+     *
+     * @param integer $order
+     *
+     * @return GalleryItem
+     */
+    public function setOrder($order)
+    {
+        $this->order = $order;
+
+        return $this;
+    }
+
+    /**
+     * Get order
+     *
+     * @return integer
+     */
+    public function getOrder()
+    {
+        return $this->order;
+    }
+
+    /**
+     * Add galleryItemsOrder
+     *
+     * @param \Backend\AdminBundle\Entity\GalleryItemOrder $galleryItemsOrder
+     *
+     * @return GalleryItem
+     */
+    public function addGalleryItemsOrder(\Backend\AdminBundle\Entity\GalleryItemOrder $galleryItemsOrder)
+    {
+        $this->galleryItemsOrder[] = $galleryItemsOrder;
+
+        return $this;
+    }
+
+    /**
+     * Remove galleryItemsOrder
+     *
+     * @param \Backend\AdminBundle\Entity\GalleryItemOrder $galleryItemsOrder
+     */
+    public function removeGalleryItemsOrder(\Backend\AdminBundle\Entity\GalleryItemOrder $galleryItemsOrder)
+    {
+        $this->galleryItemsOrder->removeElement($galleryItemsOrder);
+    }
+
+    /**
+     * Get galleryItemsOrder
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getGalleryItemsOrder()
+    {
+        return $this->galleryItemsOrder;
+    }
 }

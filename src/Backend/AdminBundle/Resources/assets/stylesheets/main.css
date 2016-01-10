@@ -6018,6 +6018,29 @@ header#main-header {
         position: absolute;
         background-color: #1a2a35; }
 
+@font-face {
+  font-family: 'bo-icons';
+  src: url("../fonts/bo-icons.eot?97bgtw");
+  src: url("../fonts/bo-icons.eot?97bgtw#iefix") format("embedded-opentype"), url("../fonts/bo-icons.ttf?97bgtw") format("truetype"), url("../fonts/bo-icons.woff?97bgtw") format("woff"), url("../fonts/bo-icons.svg?97bgtw#bo-icons") format("svg");
+  font-weight: normal;
+  font-style: normal; }
+
+[class^="icon-"], [class*=" icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'bo-icons' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale; }
+
+.icon-checkmark:before {
+  content: "\e900"; }
+
 #pages-overview-toolbar {
   position: fixed;
   bottom: 0;
@@ -6187,10 +6210,11 @@ header#main-header {
 
 .list-gallery li.list-gallery__elmt {
   height: 100%;
-  width: 24.5%;
+  width: 24.6%;
   background-color: black;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
   display: inline-block;
-  padding-bottom: 16.1983%;
   transition: .125s linear;
   position: relative;
   overflow: hidden;
@@ -6219,6 +6243,7 @@ header#main-header {
     right: 0;
     bottom: 0;
     padding: 5px 10px 3px;
+    background-color: rgba(0, 0, 0, 0.75);
     transform: scale(0.85, 0.85);
     transition: .20s ease-in-out; }
     .list-gallery li.list-gallery__elmt .list-gallery__elmt-container ul.infos li {
@@ -6251,45 +6276,31 @@ header#main-header {
       .list-gallery li.list-gallery__elmt .toolbar li a {
         color: white; }
   .list-gallery li.list-gallery__elmt figure {
-    height: 100%; }
-    .list-gallery li.list-gallery__elmt figure:after {
-      content: " ";
-      position: absolute;
-      opacity: 0;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: rgba(26, 42, 53, 0.42); }
+    width: 100%;
+    position: relative; }
+    .list-gallery li.list-gallery__elmt figure:before {
+      content: "";
+      display: block;
+      padding-top: 61.734693878%;
+      /* initial ratio of 1:1*/ }
   .list-gallery li.list-gallery__elmt img {
     position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
-    height: 100%;
-    object-fit: cover;
-    z-index: 0;
-    top: 0; }
+    height: 100%; }
 
 #removeItemGalleryModal .modal-body {
   position: relative;
   width: 100%;
   overflow: hidden; }
-  #removeItemGalleryModal .modal-body:before {
-    content: "";
-    display: block;
-    padding-top: 56.25%; }
 
-#removeItemGalleryModal .imgToDelete__container {
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  position: absolute; }
-  #removeItemGalleryModal .imgToDelete__container .imgToDelete {
-    padding: 10px;
-    height: 100%;
-    display: block;
-    margin: 0 auto;
-    object-fit: cover; }
+#removeItemGalleryModal .imgToDelete__container .imgToDelete {
+  max-height: 340px;
+  max-width: 100%;
+  display: block;
+  margin: 0 auto;
+  object-fit: cover; }
 
 #pagination {
   margin-top: 20px;
@@ -6502,6 +6513,13 @@ form .btn-select-images {
       margin-bottom: 10px;
       padding-bottom: 67.03027%;
       position: relative; }
+      #galleryModal .gallery-library li.gallery-library__item figure .icon-checkmark {
+        position: absolute;
+        right: 2px;
+        bottom: 2px;
+        font-size: 25px;
+        z-index: 9999;
+        text-shadow: -1px -1px aliceblue,  1px 1px aliceblue,  -1px 1px aliceblue,  1px -1px aliceblue; }
       #galleryModal .gallery-library li.gallery-library__item figure img {
         position: absolute;
         top: 0;

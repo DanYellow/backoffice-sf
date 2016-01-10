@@ -10,6 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 
 use Backend\AdminBundle\Entity\Project as Project;
+use Backend\AdminBundle\Entity\GalleryItemOrder as GalleryItemOrder;
 
 /**
  * GalleryItem
@@ -36,7 +37,6 @@ class GalleryItem
      * @ORM\Column(name="created_at", type="datetime")
      */
     private $createdAt;
-
 
     /**
      * @var string
@@ -65,19 +65,9 @@ class GalleryItem
 
 
     /**
-     * @ORM\ManyToMany(targetEntity="Project", inversedBy="galleryItems")
-     * @ORM\JoinTable(name="projects_galleryitems")
+     * @ORM\OneToMany(targetEntity="GalleryItemOrder", mappedBy="galleryItem", cascade={"remove"})
      */
-    private $projects;
-
-
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="order", type="integer")
-     */
-    private $order;
+    private $galleryItemsOrder;
 
 
     private $temp;
@@ -194,40 +184,6 @@ class GalleryItem
         return $this->file;
     }  
 
-    /**
-     * Add project
-     *
-     * @param \Backend\AdminBundle\Entity\Project $project
-     *
-     * @return GalleryItem
-     */
-    public function addProject(\Backend\AdminBundle\Entity\Project $project)
-    {
-        $this->projects[] = $project;
-
-        return $this;
-    }
-
-    /**
-     * Remove project
-     *
-     * @param \Backend\AdminBundle\Entity\Project $project
-     */
-    public function removeProject(\Backend\AdminBundle\Entity\Project $project)
-    {
-        $this->projects->removeElement($project);
-    }
-
-    /**
-     * Get projects
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getProjects()
-    {
-        return $this->projects;
-    }
-
 
     // Upload management
     public function getAbsolutePath()
@@ -257,8 +213,6 @@ class GalleryItem
         // when displaying uploaded doc/image in the view.
         return 'uploads/gallery';
     }
-
-
 
 
     public function upload()
@@ -324,26 +278,43 @@ class GalleryItem
 
 
     /**
-     * Set order
+     * Add galleryItemsOrder
      *
-     * @param integer $order
+     * @param \Backend\AdminBundle\Entity\GalleryItemOrder $galleryItemsOrder
      *
      * @return GalleryItem
      */
-    public function setOrder($order)
+    public function addGalleryItemsOrder(\Backend\AdminBundle\Entity\GalleryItemOrder $galleryItemsOrder)
     {
-        $this->order = $order;
+        $this->galleryItemsOrder[] = $galleryItemsOrder;
 
         return $this;
     }
 
     /**
-     * Get order
+     * Remove galleryItemsOrder
      *
-     * @return integer
+     * @param \Backend\AdminBundle\Entity\GalleryItemOrder $galleryItemsOrder
      */
-    public function getOrder()
+    public function removeGalleryItemsOrder(\Backend\AdminBundle\Entity\GalleryItemOrder $galleryItemsOrder)
     {
-        return $this->order;
+        $this->galleryItemsOrder->removeElement($galleryItemsOrder);
+    }
+
+    /**
+     * Get galleryItemsOrder
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getGalleryItemsOrder()
+    {
+        return $this->galleryItemsOrder;
+    }
+
+    public function getImageProperties($imgPath) 
+    {
+        list($width, $height, $type, $attr) = getimagesize($imgPath);
+
+        return array('width' => $width, 'height', $height);
     }
 }

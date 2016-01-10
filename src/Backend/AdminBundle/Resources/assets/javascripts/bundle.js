@@ -27,17 +27,14 @@ var DeleteGalleryItemManager = function DeleteGalleryItemManager () {
       
       $('[data-title]').text($caller.attr('data-title-modal'));
 
-      $('[data-delete-link]').attr('href', 
-        $('[data-delete-link]').attr('href').replace("__id__", $caller.attr("data-id"))
-        );
+      $('[data-delete-link]').attr('href', $caller.attr("data-url"));
 
       var nbImageOcurrences = $caller.attr('data-occurences-image');
       
       if (nbImageOcurrences) {
         var text = $('[data-text-image-occurences]').attr('data-default-text').replace("__nb__", Number(nbImageOcurrences));
         $('[data-text-image-occurences]').text(text);
-      };
-      
+      }; 
     }
 
     this.modalHidden = function (e) {
@@ -117,8 +114,8 @@ var $ = jQuery = require('jquery');
 var bootstrap = require('bootstrap');
 var ko = require('knockout');
 var _ = require('underscore');
-
 var Sortable = require('sortablejs');
+
 require('./utils');
 
 var ProjectForm = function ProjectForm(searchDelay) {
@@ -146,22 +143,33 @@ var ProjectForm = function ProjectForm(searchDelay) {
   // Contains every datas from database 
   galleryDatabaseDatas = ko.utils.parseJson(galleryDatabaseDatas);
 
+  var projectsImagesId = self.hiddenInput.val().split(',');
+
   // If image are stored in a "weird" base path, we map it
-  if (galleryBasePath) {
-    galleryDatabaseDatas = _.map(galleryDatabaseDatas, function(object){ 
-      object[galleryImgKey] = galleryBasePath + object[galleryImgKey];
-      
-      return object; 
-    });
-  }
-  
+  galleryDatabaseDatas = _.map(galleryDatabaseDatas, function(object){ 
+    object[galleryImgKey] = galleryBasePath + object[galleryImgKey];
+    object["inProject"] = (projectsImagesId.indexOf(String(object.id)) > -1) ? true : false;
+    
+    return object; 
+  });
 
   // We associate these datas to a class property for knockoutjs
   this.galleryDatabaseDatas = ko.observableArray(galleryDatabaseDatas);
 
-  var projectsImagesId = self.hiddenInput.val().split(',');
+  
   this.projectImages = ko.observableArray(_.filter(galleryDatabaseDatas, function(item){
                           return projectsImagesId.indexOf(String(item.id)) > -1; }));
+
+
+  var orderedDatas = [];
+  orderedDatas = _.map(this.projectImages(), function(item) {
+    item["order"] = projectsImagesId.indexOf(String(item.id));
+    
+    return item;
+  });
+
+  // We order the gallery items by by "order". This key is set by the backoffice
+  this.projectImages(_.sortBy(orderedDatas, "order"));
   
   this.searchTyped = ko.observable();
   this.classItems = ko.observable();
@@ -207,7 +215,7 @@ var ProjectForm = function ProjectForm(searchDelay) {
 
   this.imageSelected = function (e) {
     var idImg = ko.utils.parseJson($(e.currentTarget).attr("data-gallery-item")).id;
-  
+    console.log(self.galleryDatabaseDatas());
     if (_.findIndex(self.projectImages(), {id: idImg}) > -1) {
         // Entry exists in the array so we remove it
         self.projectImages.remove(function (item) { return Number(item.id) === Number(idImg); });
@@ -222,7 +230,7 @@ var ProjectForm = function ProjectForm(searchDelay) {
     
     if (_.findIndex(self.projectImages(), {id: idImg}) > -1) {
         // Entry exists in the array so we remove it
-      self.projectImages.remove(function (item) { return Number(item.id) === Number(idImg); });
+      self.projectImages.remove(function (item) { item.isInProject = false; return Number(item.id) === Number(idImg); });
     } else {
       // Technically none should entry in this case
       console.error('how did you make this ?');
@@ -310,11 +318,13 @@ var getItemSelected = function getItemSelected (index) {
 }
 
 window.addEventListener("load", function() {
-  var elementSelectedIndex = JSON.parse(window.sessionStorage.getItem('_toolbarCurrentPage')).index;
-  if (!isNaN(elementSelectedIndex) ) {
-    printscreensListItems[elementSelectedIndex].classList.add("active");
-    printscreensListItems[elementSelectedIndex].scrollIntoView();
-  };
+  if (window.sessionStorage.getItem('_toolbarCurrentPage')) {
+    var elementSelectedIndex = JSON.parse(window.sessionStorage.getItem('_toolbarCurrentPage')).index;
+    if (!isNaN(elementSelectedIndex) ) {
+      printscreensListItems[elementSelectedIndex].classList.add("active");
+      printscreensListItems[elementSelectedIndex].scrollIntoView();
+    };
+  }
 });
 
 for (var i = 0; i < printscreensListItems.length; i++) {

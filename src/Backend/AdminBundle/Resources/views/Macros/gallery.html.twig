@@ -1,6 +1,7 @@
 {% macro galleryelmt(galleryItem) %}
 {% set imgCompletePath = app.request.scheme ~ '://' ~ app.request.host ~ ':' ~ app.request.port ~ '/' ~ galleryItem.getWebPath %}
   <li class="list-gallery__elmt" tabindex="1">
+  {# galleryItem.getImageProperties(imgCompletePath)#}
     <div class="list-gallery__elmt-container">
         <ul class="toolbar list-unstyled">
             <li>
@@ -9,7 +10,8 @@
                     data-toggle="modal" 
                     data-target="#removeItemGalleryModal" 
                     data-img-to-delete-src="{{ imgCompletePath }}" 
-                    data-title-modal="Souhaitez-vous supprimer cette image ?" data-occurences-image="{{ galleryItem.projects|length }}"
+                    data-title-modal="Souhaitez-vous supprimer cette image ?" 
+                    data-occurences-image="{{ galleryItem.galleryItemsOrder|length }}"
                     data-id="{{ galleryItem.id }}">
                     Supprimer
                 </button>

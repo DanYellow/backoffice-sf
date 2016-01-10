@@ -30,7 +30,8 @@
             data-search-type="contains">
             <li class="col-md-4 col-sm-6 gallery-library__item" data-bind="attr: { 'class': 'col-md-4 col-sm-6 gallery-library__item col-lg-' + $parent.classItems() }">
               <button class="reset-btn" type="button" data-bind="attr: { 'data-gallery-item': JSON.stringify($data) }">
-                <figure>     
+                <figure>
+                  <div class="icon-checkmark" data-bind="visible: inProject"></div>
                   <img data-bind="attr: { src: webPath }" alt="" />
                 </figure>
               </button>

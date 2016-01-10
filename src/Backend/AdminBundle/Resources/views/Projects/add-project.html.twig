@@ -4,7 +4,13 @@
 
 {% form_theme form "BackendAdminBundle:form:form_errors.html.twig" %}
 
-{% block titleTab %}Galerie{% endblock %}
+{% block titleTab %}
+  {% if (app.request.attributes.get('_route') == "backend_admin_project_update") %}
+    Mettre à jour le projet {{ form.title.vars.value }}
+  {% else %}
+    Ajouter un nouveau projet
+  {% endif %}
+{% endblock %}
 
 
 {% block sectiontitle %} 

@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 
 use Backend\AdminBundle\Entity\Project;
+use Backend\AdminBundle\Entity\GalleryItemOrder;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -56,8 +57,8 @@ class ProjectController extends Controller
   # @returns a string of every gallery items contained in the project
   private function getGalleryItemId($project) {
     $ids = [];
-    foreach ($project->getGalleryItems() as $galleryItem) {
-      $ids[] = $galleryItem->getId();
+    foreach ($project->getGalleryItemsOrder() as $galleryItem) {
+      $ids[] = $galleryItem->getGalleryItem()->getId();
     }
     
     return implode(",", $ids);
@@ -123,8 +124,7 @@ class ProjectController extends Controller
         ->add('description')
         ->add('galleryItemsId', HiddenType::class, 
                 array('attr' => array(
-                  'id' => "perojectImagesId",
-                  'value' => "12"
+                  'id' => 'perojectImagesId'
                 )))
         ->add('save', SubmitType::class,
                     array('label' => 'Ajouter')
@@ -140,14 +140,16 @@ class ProjectController extends Controller
       
       foreach ($galleryItemsIdArray as $index=>$id) {
         $galleryItem = $em->find('Backend\AdminBundle\Entity\GalleryItem', $id);
-        // $galleryItem->setOrder($index);
-        $project->addGalleryItem($galleryItem);
 
-        $galleryItem->addProject($project);
-        $em->persist($galleryItem);
+        $galleryItemOrder = new GalleryItemOrder();
+
+        $galleryItemOrder->setGalleryItem($galleryItem);
+        $galleryItemOrder->setProject($project);
+        $galleryItemOrder->setOrderInProject($index);
+
+        $em->persist($galleryItemOrder);
+        $em->flush();
       }
-
-       // array_search('green', $array);
 
       $em->persist($project);
       $em->flush();
@@ -180,7 +182,7 @@ class ProjectController extends Controller
     $em = $this->getDoctrine()->getManager();
 
     $project = $em->find('Backend\AdminBundle\Entity\Project', $id);
-  
+    
     $form = $this->createFormBuilder($project)
         ->add('title')
         ->add('isOnline', ChoiceType::class,array(
@@ -207,44 +209,60 @@ class ProjectController extends Controller
 
     $form->handleRequest($request);
     
+    // http://future500.nl/articles/2013/09/doctrine-2-how-to-handle-join-tables-with-extra-columns/
     if ($form->isValid()) {
-      $galleryItemsIdArray = array_filter(explode(',', $project->getGalleryItemsId()));
-
+      $galleryItemsIdArray  = array_filter(explode(',', $project->getGalleryItemsId()));
+      
       $intialItemsIdProject = array_filter(explode(',', $this->getGalleryItemId($project))); 
       
       $em = $this->getDoctrine()->getManager();
+
+      $query = $em->createQuery('SELECT u FROM BackendAdminBundle:GalleryItemOrder u WHERE u.galleryItem = :giId AND u.project = :projectId');
       
+
       // Add new images
       foreach ($galleryItemsIdArray as $index=>$id) {
-        $galleryItem = $em->find('Backend\AdminBundle\Entity\GalleryItem', $id);
-    
-        if (!$project->getGalleryItems()->contains($galleryItem)) {
-          $project->addGalleryItem($galleryItem);
-          $galleryItem->addProject($project);
+        $galleryItem      = $em->find('Backend\AdminBundle\Entity\GalleryItem', $id);
 
-          $em->persist($galleryItem);
+        $query->setParameters(array(
+            'giId' => $id,
+            'projectId' => $project->getId()
+        ));
+
+        $galleryItemOrder = $query->getOneOrNullResult();
+
+        // This element exists we only change his order  
+        if ($galleryItemOrder) {
+          $galleryItemOrder->setOrderInProject($index);
+        } else {
+          $galleryItemOrder = new GalleryItemOrder();
+
+          $galleryItemOrder->setGalleryItem($galleryItem);
+          $galleryItemOrder->setProject($project);
+          $galleryItemOrder->setOrderInProject($index);
         }
+
+        $em->persist($galleryItemOrder);
+        $em->flush();
         // We reorder elements in the projects
         // http://stackoverflow.com/questions/15616157/doctrine-2-and-many-to-many-link-table-with-an-extra-field
-        // echo array_search($id, $galleryItemsIdArray);
-        // $galleryItem->setOrder(array_search($id, $galleryItemsIdArray));
       }
 
-      // Remove old images
-      foreach ($intialItemsIdProject as $index=>$id) {
-        $galleryItem = $em->find('Backend\AdminBundle\Entity\GalleryItem', $id);
-
-        if (!in_array($id, $galleryItemsIdArray) && $project->getGalleryItems()->contains($galleryItem)) { 
-
-          $project->removeGalleryItem($galleryItem);
-          $galleryItem->removeProject($project);
-
-          $em->persist($galleryItem);
-        }
-
+      // Remove the items removed from the project
+      foreach (array_diff($intialItemsIdProject, $galleryItemsIdArray) as $key => $galleryItemId) {
+        $galleryItem = $em->find('Backend\AdminBundle\Entity\GalleryItem', $galleryItemId);
         
-      }         
+        $galleryItemOrder = $em->getRepository('Backend\AdminBundle\Entity\GalleryItemOrder')
+                               ->findOneBy(
+                                  array('project' => $project->getId(), 
+                                        'galleryItem' => $galleryItemId)
+                                );
 
+        $em->remove($galleryItemOrder);
+        $em->flush();
+      }
+ 
+      
       $em->persist($project);
       $em->flush();
 
@@ -284,7 +302,7 @@ class ProjectController extends Controller
       $em->flush();
       $request->getSession()
             ->getFlashBag()
-            ->add('successMessage', 'Le projet ' . $entity->getTitle() . ' a été correctement supprimée');
+            ->add('successMessage', 'Le projet ' . $entity->getTitle() . ' a été correctement supprimé');
     } else {
       $request->getSession()
             ->getFlashBag()

@@ -10,6 +10,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 use Backend\AdminBundle\Entity\GalleryItem as GalleryItem;
 use Backend\AdminBundle\Entity\Category as Category;
+use Backend\AdminBundle\Entity\GalleryItemOrder as GalleryItemOrder;
+
 
 /**
  * Project
@@ -58,10 +60,10 @@ class Project
 
 
     /**
-     * @ORM\ManyToMany(targetEntity="GalleryItem", mappedBy="projects")
-     * @ORM\OrderBy({"order" = "ASC"})
+     * @ORM\OneToMany(targetEntity="GalleryItemOrder", mappedBy="project", cascade={"remove"})
+     * @ORM\OrderBy({"orderInProject" = "ASC"})
      */
-    private $galleryItems;
+    private $galleryItemsOrder;
 
     /**
      * @ORM\ManyToOne(targetEntity="Category", inversedBy="projects")
@@ -78,26 +80,11 @@ class Project
     public function __construct()
     {
         $this->createdAt = new \DateTime();
-        $this->galleryItems = new ArrayCollection();
+        $this->galleryItemsOrder = new ArrayCollection();
         $this->isOnline = false;
     }
 
-    public function addGalleryItem(GalleryItem $galleryitem)
-    {
-        $this->galleryItems[] = $galleryitem;
 
-        return $this;
-    }
-
-    public function removeGalleryItem(GalleryItem $galleryitem)
-    {
-      $this->galleryItems->removeElement($galleryitem);
-    }
-
-    public function getGalleryItems()
-    {
-      return $this->galleryItems;
-    }
 
 
     /**
@@ -250,5 +237,39 @@ class Project
     public function getGalleryItemsId()
     {
         return $this->galleryItemsId;
+    }
+
+    /**
+     * Add galleryItemsOrder
+     *
+     * @param \Backend\AdminBundle\Entity\GalleryItemOrder $galleryItemsOrder
+     *
+     * @return Project
+     */
+    public function addGalleryItemsOrder(\Backend\AdminBundle\Entity\GalleryItemOrder $galleryItemsOrder)
+    {
+        $this->galleryItemsOrder[] = $galleryItemsOrder;
+
+        return $this;
+    }
+
+    /**
+     * Remove galleryItemsOrder
+     *
+     * @param \Backend\AdminBundle\Entity\GalleryItemOrder $galleryItemsOrder
+     */
+    public function removeGalleryItemsOrder(\Backend\AdminBundle\Entity\GalleryItemOrder $galleryItemsOrder)
+    {
+        $this->galleryItemsOrder->removeElement($galleryItemsOrder);
+    }
+
+    /**
+     * Get galleryItemsOrder
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getGalleryItemsOrder()
+    {
+        return $this->galleryItemsOrder;
     }
 }
