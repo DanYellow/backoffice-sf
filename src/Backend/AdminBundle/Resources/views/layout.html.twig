@@ -7,14 +7,10 @@
   <title>{% block titleTab %}Le backoffice de Pikachu{% endblock %}</title>
     
   {% block stylesheets %}
-   {% stylesheets '@BackendAdminBundle/Resources/assets/stylesheets/main.css' filter="cssrewrite" %}
-        <link href="{{ asset_url }}" rel="stylesheet" type="text/css" />
-   {% endstylesheets %}
+   
+          <link href="{{ asset("bundles/backendadmin/stylesheets/main.css") }}" rel="stylesheet" type="text/css" />
   {% endblock %}
 
-  {% block css %}
-    
-  {% endblock %}
   <script type="text/javascript">
   var App = {
     environment: "prod"
@@ -30,7 +26,9 @@
                     <span>Bonjour {{ app.user.firstname }}</span>
                 </div>
                 <div class="col-xs-6 text-right">
+                  <p>
                     <a href="{{ path('fos_user_security_logout')}}">Déconnexion</a>
+                  </p>
                 </div>
             </div>
         </div>

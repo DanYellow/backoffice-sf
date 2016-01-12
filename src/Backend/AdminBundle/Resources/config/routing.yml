@@ -64,6 +64,13 @@ backend_admin_api_projects:
     requirements:
         _method: GET
 
+backend_admin_api_project:
+    path:     /api/project/{id}
+    defaults: { _controller: BackendAdminBundle:API:getProject }
+    requirements:
+        _method: GET
+        page: \d+
+
 # Profile
 # backend_admin_projectspage:
 #     path:     /admin/projects

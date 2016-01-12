@@ -9,6 +9,18 @@ use Backend\AdminBundle\Entity\Project;
 
 class APIController extends Controller
 {
+    private function getGalleryItem($project)
+    {
+      $projectsJSON = array();
+      $projectImages = [];
+
+      foreach ($project->getGalleryItemsOrder() as $galleryItemOrder) {
+        $projectImages[] = $galleryItemOrder->getGalleryItem()->getPath();
+      }
+
+      return $projectImages;
+    }
+
     public function getProjectsAction($category = null)
     {
     	$em = $this->getDoctrine()->getManager();
@@ -41,26 +53,48 @@ class APIController extends Controller
       
       $projectsJSON = array();
       foreach ($projects as $key => $project) {
-      	
-      	$projectImages = [];
-      	foreach ($project->getGalleryItems() as $galleryItem) {
-      		$projectImages[] = $galleryItem->getPath();
-      	}
-
       	$projectsJSON[] = array(
 															'id'          => $project->getId(), 
 															'name'        => $project->getTitle(),
-															'thumb'       => '',
+															'thumb'       => $this->getGalleryItem($project)[0],
 															'description' => $project->getDescription(), 
 															'category'    => $project->getCategory()->getSlugName(),
-															'images'      => implode(',', $projectImages),
+															'images'      => implode(',', $this->getGalleryItem($project)),
 															'online'      => true,
 															'createdAt'   => $project->getCreatedAt()->format('Y-m-d H:i:s'),
 															'realisedAt'  => '17/09/2013'
       											 );
       }
 
-
       return new JsonResponse($projectsJSON);
     }
+
+    public function getProjectAction($id) {
+      $em = $this->getDoctrine()->getManager();
+
+      $project = $em->find('Backend\AdminBundle\Entity\Project', $id);
+
+      // A project with this id doesn't exist
+      if (null === $project) {
+        return new JsonResponse(array('error' => 'a project with this id doesn\'t exist'));
+      }
+
+      if ($project->getIsOnline() === false) {
+        return new JsonResponse(array('error' => 'this project is not online currently'));
+      }
+
+      $projectJSON = array(
+                      'id'          => $project->getId(), 
+                      'name'        => $project->getTitle(),
+                      'thumb'       => $this->getGalleryItem($project)[0],
+                      'description' => $project->getDescription(), 
+                      'category'    => $project->getCategory()->getSlugName(),
+                      'images'      => implode(',', $this->getGalleryItem($project)),
+                      'online'      => true,
+                      'createdAt'   => $project->getCreatedAt()->format('Y-m-d H:i:s'),
+                      'realisedAt'  => '17/09/2013'
+                     );
+
+      return new JsonResponse($projectJSON);
+    } 
 }
