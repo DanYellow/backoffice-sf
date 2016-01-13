@@ -12,7 +12,8 @@
                     data-img-to-delete-src="{{ imgCompletePath }}" 
                     data-title-modal="Souhaitez-vous supprimer cette image ?" 
                     data-occurences-image="{{ galleryItem.galleryItemsOrder|length }}"
-                    data-id="{{ galleryItem.id }}">
+                    data-url="{{ path('backend_admin_gallery_delete', {'id' : galleryItem.id }) }}"
+                    >
                     Supprimer
                 </button>
             </li> 

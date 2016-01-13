@@ -79,6 +79,8 @@ class GalleryController extends Controller
           $em->persist($galleryItem);
           $em->flush();
 
+          $this->writeThumbnail($galleryItem, 'gallery_thumb');
+
           $request->getSession()
                   ->getFlashBag()
                   ->add('successMessage', 'L\'image a été ajoutée !');
@@ -97,7 +99,6 @@ class GalleryController extends Controller
                   ) 
               );
   }
-
 
   public function deleteItemGalleryAction(Request $request, $id)
   {
@@ -120,6 +121,4 @@ class GalleryController extends Controller
 
     return $this->redirectToRoute('backend_admin_gallery_display', array('page' => 1), 301);
   }
-
-    
 }

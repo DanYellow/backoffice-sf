@@ -21,6 +21,14 @@ class APIController extends Controller
       return $projectImages;
     }
 
+    private function getThumbProject($project)
+    {
+      $galleryItemOrder = $project->getGalleryItemsOrder()[0];
+      $path = $galleryItemOrder->getGalleryItem()->getWebPath();
+
+      return $this->get('liip_imagine.cache.manager')->getBrowserPath($path, 'gallery_thumb');
+    }
+
     public function getProjectsAction($category = null)
     {
     	$em = $this->getDoctrine()->getManager();
@@ -56,7 +64,7 @@ class APIController extends Controller
       	$projectsJSON[] = array(
 															'id'          => $project->getId(), 
 															'name'        => $project->getTitle(),
-															'thumb'       => $this->getGalleryItem($project)[0],
+															'thumb'       => $this->getThumbProject($project),
 															'description' => $project->getDescription(), 
 															'category'    => $project->getCategory()->getSlugName(),
 															'images'      => implode(',', $this->getGalleryItem($project)),
@@ -86,7 +94,7 @@ class APIController extends Controller
       $projectJSON = array(
                       'id'          => $project->getId(), 
                       'name'        => $project->getTitle(),
-                      'thumb'       => $this->getGalleryItem($project)[0],
+                      'thumb'       => $this->getThumbProject($project),
                       'description' => $project->getDescription(), 
                       'category'    => $project->getCategory()->getSlugName(),
                       'images'      => implode(',', $this->getGalleryItem($project)),

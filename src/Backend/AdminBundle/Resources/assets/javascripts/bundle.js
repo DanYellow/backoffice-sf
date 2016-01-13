@@ -155,6 +155,7 @@ var ProjectForm = function ProjectForm(searchDelay) {
 
   // We associate these datas to a class property for knockoutjs
   this.galleryDatabaseDatas = ko.observableArray(galleryDatabaseDatas);
+  // this.galleryDatabaseDatas.subscribe(function (newValue) { alert(JSON.stringify(newValue )); });
 
   
   this.projectImages = ko.observableArray(_.filter(galleryDatabaseDatas, function(item){
@@ -177,7 +178,7 @@ var ProjectForm = function ProjectForm(searchDelay) {
   
   this.searchResults = ko.computed(function() {
     if(!this.searchTyped()) {
-      return this.galleryDatabaseDatas(); 
+      return self.galleryDatabaseDatas(); 
     } else {
       return ko.utils.arrayFilter(self.galleryDatabaseDatas(), function(item) {  
         var finalFilter = [];      
@@ -213,20 +214,34 @@ var ProjectForm = function ProjectForm(searchDelay) {
     return classSuffix;
   }, this);
 
+  // Update the status of the item in the gallery (change key "inProject")
+  this.updateItemInSearch = function(id) {
+    var galleryItem = oldItem = _.findWhere(self.galleryDatabaseDatas(), {id: id});
+    galleryItem.inProject = !galleryItem.inProject;
+
+    self.galleryDatabaseDatas.replace(oldItem, galleryItem);
+    ko.components.clearCachedDefinition(self.galleryDatabaseDatas);
+  }
+
   this.imageSelected = function (e) {
     var idImg = ko.utils.parseJson($(e.currentTarget).attr("data-gallery-item")).id;
-    console.log(self.galleryDatabaseDatas());
+    
+    self.updateItemInSearch(idImg);
+
     if (_.findIndex(self.projectImages(), {id: idImg}) > -1) {
         // Entry exists in the array so we remove it
         self.projectImages.remove(function (item) { return Number(item.id) === Number(idImg); });
     } else {
         self.projectImages.push(ko.utils.parseJson($(e.currentTarget).attr("data-gallery-item")));
     }
+
     self.hiddenInput.val(_.pluck(self.projectImages(), 'id').join(','));
   }
 
   this.removeProjectImage = function (e) {
     var idImg = ko.utils.parseJson($(e.currentTarget).attr("data-gallery-item")).id;
+
+    self.updateItemInSearch(idImg);
     
     if (_.findIndex(self.projectImages(), {id: idImg}) > -1) {
         // Entry exists in the array so we remove it
