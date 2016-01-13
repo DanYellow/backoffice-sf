@@ -29,6 +29,13 @@ liip_imagine:
             quality: 75
             filters:
                 thumbnail: { size: [500, 300], mode: outbound }
+        thumb_menu_front:
+            quality: 60
+            filters:
+                thumbnail: { size: [60, 60], mode: outbound }
+        select_image_front:
+            filters:
+                relative_resize: { widen: 966 }
 
 
 framework:

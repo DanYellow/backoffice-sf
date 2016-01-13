@@ -15,7 +15,8 @@ class APIController extends Controller
       $projectImages = [];
 
       foreach ($project->getGalleryItemsOrder() as $galleryItemOrder) {
-        $projectImages[] = $galleryItemOrder->getGalleryItem()->getPath();
+        $path = $galleryItemOrder->getGalleryItem()->getWebPath();
+        $projectImages[] = $this->get('liip_imagine.cache.manager')->getBrowserPath($path, 'select_image_front');
       }
 
       return $projectImages;
@@ -24,9 +25,9 @@ class APIController extends Controller
     private function getThumbProject($project)
     {
       $galleryItemOrder = $project->getGalleryItemsOrder()[0];
-      $path = $galleryItemOrder->getGalleryItem()->getWebPath();
+      $path = $galleryItemOrder->getGalleryItem()->getWebPath(); 
 
-      return $this->get('liip_imagine.cache.manager')->getBrowserPath($path, 'gallery_thumb');
+      return $this->get('liip_imagine.cache.manager')->getBrowserPath($path, 'thumb_menu_front');
     }
 
     public function getProjectsAction($category = null)
