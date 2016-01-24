@@ -200,7 +200,7 @@ class GalleryItem
             : $this->getUploadDir().'/'.$this->path;
     }
 
-    public function getUploadRootDir()
+    protected function getUploadRootDir()
     {
         // the absolute directory path where uploaded
         // documents should be saved

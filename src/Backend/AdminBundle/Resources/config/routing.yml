@@ -71,6 +71,12 @@ backend_admin_api_project:
         _method: GET
         page: \d+
 
+backend_admin_api_slider:
+    path:     /api/projects/{category}
+    defaults: { _controller: BackendAdminBundle:API:getProjects, category: all }
+    requirements:
+        _method: GET
+
 # Profile
 # backend_admin_projectspage:
 #     path:     /admin/projects

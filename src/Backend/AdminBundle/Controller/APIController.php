@@ -22,17 +22,17 @@ class APIController extends Controller
       return $projectImages;
     }
 
-    private function getThumbProject($project)
+    private function getThumbProject($project, $filter = 'thumb_menu_front')
     {
       $galleryItemOrder = $project->getGalleryItemsOrder()[0];
       $path = $galleryItemOrder->getGalleryItem()->getWebPath(); 
 
-      return $this->get('liip_imagine.cache.manager')->getBrowserPath($path, 'thumb_menu_front');
+      return $this->get('liip_imagine.cache.manager')->getBrowserPath($path, $filter);
     }
 
     public function getProjectsAction($category = null)
     {
-    	$em = $this->getDoctrine()->getManager();
+      $em = $this->getDoctrine()->getManager();
 
       $query = $em->createQueryBuilder('p')
                   ->select('p')
@@ -62,17 +62,17 @@ class APIController extends Controller
       
       $projectsJSON = array();
       foreach ($projects as $key => $project) {
-      	$projectsJSON[] = array(
-															'id'          => $project->getId(), 
-															'name'        => $project->getTitle(),
-															'thumb'       => $this->getThumbProject($project),
-															'description' => $project->getDescription(), 
-															'category'    => $project->getCategory()->getSlugName(),
-															'images'      => implode(',', $this->getGalleryItem($project)),
-															'online'      => true,
-															'createdAt'   => $project->getCreatedAt()->format('Y-m-d H:i:s'),
-															'realisedAt'  => '17/09/2013'
-      											 );
+        $projectsJSON[] = array(
+                              'id'          => $project->getId(), 
+                              'name'        => $project->getTitle(),
+                              'thumb'       => $this->getThumbProject($project),
+                              'description' => $project->getDescription(), 
+                              'category'    => $project->getCategory()->getSlugName(),
+                              'images'      => implode(',', $this->getGalleryItem($project)),
+                              'online'      => true,
+                              'createdAt'   => $project->getCreatedAt()->format('Y-m-d H:i:s'),
+                              'realisedAt'  => '17/09/2013'
+                             );
       }
 
       return new JsonResponse($projectsJSON);
@@ -105,5 +105,36 @@ class APIController extends Controller
                      );
 
       return new JsonResponse($projectJSON);
-    } 
+    }
+
+
+    public function getSliderAction($category = null)
+    {
+      $em = $this->getDoctrine()->getManager();
+
+      $query = $em->createQueryBuilder('p')
+                  ->select('p')
+                  ->from('BackendAdminBundle:Project', 'p')
+                  ->andWhere('p.isOnline = 1')
+                  ->leftJoin('p.category', 'c');
+
+      if ($category !== null && $category !== "all") {
+
+        $query->andWhere('c.name = :categoryName')
+              ->setParameters(array('categoryName' => $category));
+      }
+      
+      $projects = $query->getQuery()->getResult();
+
+      $projectsJSON = array();
+      foreach ($projects as $key => $project) {
+        $projectsJSON[] = array(
+                              'id'          => $project->getId(), 
+                              'imgPath'       => $this->getThumbProject($project, $filter = 'image_slider_front'),
+                              'path'    => '',
+                             );
+      }
+
+      return new JsonResponse($projectsJSON);
+    }
 }
