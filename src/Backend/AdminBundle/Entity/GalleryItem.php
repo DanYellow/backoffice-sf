@@ -55,10 +55,10 @@ class GalleryItem
     /**
      * 
      * @Assert\Image(
-     *          maxSize = "6M", 
-     *          maxSizeMessage = "Ce fichier est trop lourd ({{ size }}). La taille maximum autorisée est de : {{ limit }}",
      *          mimeTypes={"image/jpeg", "image/jpg", "image/png", "image/gif"},
-     *          mimeTypesMessage= "Ce format n'est pas autorisé. Seul les images au format .jp(e)g, .png et .gif sont autorisés"
+     *          mimeTypesMessage= "Ce format n'est pas autorisé. Seul les images au format .jp(e)g, .png et .gif sont autorisés",
+     *          maxSize = "6M", 
+     *          maxSizeMessage = "Ce fichier est trop lourd ({{ size }}). La taille maximum autorisée est de : {{ limit }}"
      * )
      */
     private $file;

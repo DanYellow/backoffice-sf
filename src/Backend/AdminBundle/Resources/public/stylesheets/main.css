@@ -6210,7 +6210,7 @@ header#main-header {
 
 .list-gallery li.list-gallery__elmt {
   height: 100%;
-  width: 24.6%;
+  width: 24.5%;
   background-color: black;
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
@@ -6437,6 +6437,24 @@ form .btn-select-images {
   padding: 6px 15px;
   font-family: "open_sanssemibold", "Helvetica Neue", "Arial", sans-serif;
   font-size: 12px; }
+
+.last-images-added {
+  margin-top: 20px; }
+  .last-images-added h6 {
+    padding-bottom: 5px;
+    border-bottom: 1px solid black; }
+  .last-images-added ul {
+    list-style: none;
+    padding-left: 0; }
+    .last-images-added ul li {
+      height: 100px; }
+  .last-images-added figure {
+    width: 100%;
+    height: 100%;
+    overflow: hidden; }
+  .last-images-added img {
+    max-height: 100%;
+    width: auto; }
 
 #galleryModal h4 {
   font-size: 22px;

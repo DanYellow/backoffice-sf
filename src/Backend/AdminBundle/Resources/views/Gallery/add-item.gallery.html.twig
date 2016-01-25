@@ -14,8 +14,9 @@
   
   <form method="post" {{ form_enctype(form) }} class="col-xs-12" novalidate="novalidate">
       {{ form_errors(form) }}
-  {{ form_errors(form.name) }}
-  {{ form_errors(form.file) }}
+      {{ form_errors(form.name) }}
+      {{ form_errors(form.file) }}
+  
       <div class="form-element">
           <label for="{{ form.name.vars.id }}">Nom de l'image (facultatif)</label>
           {{ form_widget(form.name) }}
@@ -32,7 +33,21 @@
       <div class="form-element">
         <input type="submit" value="Ajouter" name="{{ form.save.vars.name }}">
       </div>
-
    </form>
   </div>
+
+  {% if lastImages %}
+  <div class="last-images-added">
+    <h6>Dernières images ajoutées </h6>
+    
+    <ul class="row">
+      {% for image in lastImages %}
+        <li class="col-xs-3">
+          {% set imgCompletePath = app.request.scheme ~ '://' ~ app.request.host ~ ':' ~ app.request.port ~ '/' ~ image.getWebPath %}
+          <figure><img src="{{ imgCompletePath }}" alt="" /></figure>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
 {% endblock %}

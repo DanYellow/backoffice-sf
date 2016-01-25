@@ -46,7 +46,7 @@ class Project
     /**
      * @var string
      *
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(message="Veuillez définir un titre")
      * @ORM\Column(name="title", type="string", length=100, nullable=false)
      */
     private $title;

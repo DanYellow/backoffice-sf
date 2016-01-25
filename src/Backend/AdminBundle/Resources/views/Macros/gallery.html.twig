@@ -1,7 +1,6 @@
 {% macro galleryelmt(galleryItem) %}
 {% set imgCompletePath = app.request.scheme ~ '://' ~ app.request.host ~ ':' ~ app.request.port ~ '/' ~ galleryItem.getWebPath %}
   <li class="list-gallery__elmt" tabindex="1">
-  {# galleryItem.getImageProperties(imgCompletePath)#}
     <div class="list-gallery__elmt-container">
         <ul class="toolbar list-unstyled">
             <li>
@@ -19,7 +18,6 @@
             </li> 
         </ul>
     </div>
-
-    <figure><img src="{{ imgCompletePath }}" alt="{{ galleryItem.path }}" /></figure>
+    <figure><img src="{{ galleryItem.getWebPath | imagine_filter('gallery_thumb') }}" alt="{{ galleryItem.name }}" /></figure>
   </li>
 {% endmacro %}

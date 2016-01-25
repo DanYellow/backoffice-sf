@@ -30,7 +30,9 @@
     </div>
 
     {% if project.galleryItemsOrder[0] is defined %}
+        {{ imgCompletePath }}
         <figure><img src="{{ imgCompletePath | imagine_filter('gallery_thumb') }}" alt="{{ projectGalleryFirstItem.path }}" /></figure>
+        }
     {% endif %}
   </li>
 {% endmacro %}

@@ -24,6 +24,8 @@ Clear cache (dev) : php app/console ca:cl -e=dev
 Clear cache (prod) : php app/console ca:cl -e=prod
 Debug routes : php bin/console debug:router
 
+Publish assets from public folder : php app/console assets:install
+
 
 http://www.symfony2cheatsheet.com/
 http://stackoverflow.com/questions/9261296/how-to-debug-template-binding-errors-for-knockoutjs

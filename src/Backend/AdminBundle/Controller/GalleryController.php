@@ -71,6 +71,13 @@ class GalleryController extends Controller
 
       $form->handleRequest($request);
 
+      $em = $this->getDoctrine()->getManager();
+      $query = $em->createQueryBuilder('p')
+                  ->select('p')
+                  ->from('BackendAdminBundle:GalleryItem', 'p')
+                  ->orderBy('p.id', 'DESC');
+      $lastImages = $query->setMaxResults(4)->getQuery()->getResult();
+
       if ($form->isValid()) {
           $em = $this->getDoctrine()->getManager();
 
@@ -78,8 +85,6 @@ class GalleryController extends Controller
 
           $em->persist($galleryItem);
           $em->flush();
-
-          $this->writeThumbnail($galleryItem, 'gallery_thumb');
 
           $request->getSession()
                   ->getFlashBag()
@@ -95,7 +100,8 @@ class GalleryController extends Controller
 
       return $this->render('BackendAdminBundle:Gallery:add-item.gallery.html.twig', 
                   array(
-                      'form' => $form->createView(), 
+                    'form' => $form->createView(),
+                    'lastImages' => $lastImages
                   ) 
               );
   }
