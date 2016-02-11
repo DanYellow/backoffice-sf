@@ -5922,7 +5922,9 @@ html {
   background: linear-gradient(#f2f6fd, #ffffff);
   width: 100%;
   min-height: 100%;
-  -webkit-overflow-scrolling: touch; }
+  -webkit-overflow-scrolling: touch;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased; }
 
 body {
   width: 100%;
@@ -6222,17 +6224,25 @@ header#main-header {
   margin-bottom: auto; }
   @media screen and (max-width: 768px) {
     .list-gallery li.list-gallery__elmt {
-      width: 100%;
-      padding-bottom: 42%; } }
+      width: 100%; } }
   @media screen and (min-width: 768px) and (max-width: 992px) {
     .list-gallery li.list-gallery__elmt {
-      width: 49.5%;
-      padding-bottom: 30%; } }
+      width: 49.5%; } }
   .list-gallery li.list-gallery__elmt:hover .list-gallery__elmt-container, .list-gallery li.list-gallery__elmt:focus .list-gallery__elmt-container {
     opacity: 1;
     transform: scale(1, 1); }
   .list-gallery li.list-gallery__elmt:hover figure:after, .list-gallery li.list-gallery__elmt:focus figure:after {
     opacity: 1; }
+  .list-gallery li.list-gallery__elmt.online:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 3px solid green;
+    z-index: 99;
+    pointer-events: none; }
   .list-gallery li.list-gallery__elmt .list-gallery__elmt-container {
     border: 2px solid #1a2a35;
     opacity: 0;
@@ -6254,6 +6264,9 @@ header#main-header {
         font-size: 14px;
         font-family: "open_sanssemibold", "Helvetica Neue", "Arial", sans-serif;
         margin-bottom: -2px; }
+      .list-gallery li.list-gallery__elmt .list-gallery__elmt-container ul.infos li.online {
+        margin-top: 12px;
+        color: green; }
   .list-gallery li.list-gallery__elmt .toolbar {
     position: absolute;
     bottom: 3px;
@@ -6365,6 +6378,8 @@ form .form-element {
     display: block; }
   form .form-element label {
     margin-bottom: 6px; }
+  form .form-element input[type="text"] {
+    width: 300px; }
   form .form-element .input-radio-container {
     display: inline-block;
     margin-right: 30px; }
@@ -6409,7 +6424,8 @@ form .list-images-selected {
       right: 10px;
       top: -10px;
       z-index: 100;
-      cursor: pointer; }
+      cursor: pointer;
+      text-shadow: -1px -1px aliceblue,  1px 1px aliceblue,  -1px 1px aliceblue,  1px -1px aliceblue; }
       form .list-images-selected li.list-images-selected__item button:hover {
         color: #b5c5d0; }
     form .list-images-selected li.list-images-selected__item figure {
@@ -6454,7 +6470,9 @@ form .btn-select-images {
     overflow: hidden; }
   .last-images-added img {
     max-height: 100%;
-    width: auto; }
+    width: auto;
+    margin: 0 auto;
+    display: block; }
 
 #galleryModal h4 {
   font-size: 22px;

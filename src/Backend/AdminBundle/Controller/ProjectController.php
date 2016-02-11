@@ -29,14 +29,22 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 
 
-use BackendAdminBundle\Form\Type\GalleryItemType;
+use Backend\AdminBundle\Form\Type\ProjectStateType;
 
 
 class ProjectController extends Controller
 {
 
   private $itemsPerPage = 16;
-  private $isOnlineChoices = array(true => 'Oui', false => 'Non');
+
+  private function getThumbModal($galleryItem)
+  {
+    $path = $galleryItem->webPath;
+
+    $galleryItem->thumb = $this->get('liip_imagine.cache.manager')->getBrowserPath($path, 'modal_gallery_thumb');
+
+    return $galleryItem;
+  }
 
   # @returns content of gallery in json format
   private function getGalleryItems() {
@@ -51,7 +59,10 @@ class ProjectController extends Controller
 
     $em = $this->getDoctrine()->getManager();
     $galleryItems = $em->getRepository('BackendAdminBundle:GalleryItem')->findAll();
-    return $galleryItems = $serializer->serialize($galleryItems, 'json');
+
+    $foo = array_map(array($this, 'getThumbModal'), json_decode($serializer->serialize($galleryItems, 'json')));
+    
+    return json_encode($foo);
   }
 
   # @returns a string of every gallery items contained in the project
@@ -111,12 +122,7 @@ class ProjectController extends Controller
 
     $form = $this->createFormBuilder($project)
         ->add('title')
-        ->add('isOnline', ChoiceType::class,array(
-             'choices' => $this->isOnlineChoices,
-             'expanded' => true,
-             'multiple' => false,
-             'data' => 0
-        ))
+        ->add('isOnline', ProjectStateType::class)
         ->add('category', EntityType::class, array(
                             'class' => 'BackendAdminBundle:Category',
                             'choice_label' => 'name',
@@ -185,12 +191,7 @@ class ProjectController extends Controller
     
     $form = $this->createFormBuilder($project)
         ->add('title')
-        ->add('isOnline', ChoiceType::class,array(
-             'choices' => $this->isOnlineChoices,
-             'expanded' => true,
-             'multiple' => false,
-             'data' => (int)$project->getIsOnline()
-        ))
+        ->add('isOnline', ProjectStateType::class)
         ->add('category', EntityType::class, array(
                             'class' => 'BackendAdminBundle:Category',
                             'choice_label' => 'name',

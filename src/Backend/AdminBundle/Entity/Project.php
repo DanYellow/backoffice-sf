@@ -46,8 +46,7 @@ class Project
     /**
      * @var string
      *
-     * @Assert\NotBlank(message="Veuillez définir un titre")
-     * @ORM\Column(name="title", type="string", length=100, nullable=false)
+     * @ORM\Column(name="title", type="string", length=100, nullable=true)
      */
     private $title;
 
@@ -76,6 +75,10 @@ class Project
     private $galleryItemsId;
 
 
+    // Empty field for slider image id. Not Stored only for forms
+    private $sliderImageId;
+
+
     // Constructor
     public function __construct()
     {
@@ -83,8 +86,6 @@ class Project
         $this->galleryItemsOrder = new ArrayCollection();
         $this->isOnline = false;
     }
-
-
 
 
     /**
@@ -225,8 +226,6 @@ class Project
         return $this->category;
     }
 
-
-
     public function setGalleryItemsId($galleryItemsId)
     {        
         $this->galleryItemsId = $galleryItemsId;
@@ -237,6 +236,18 @@ class Project
     public function getGalleryItemsId()
     {
         return $this->galleryItemsId;
+    }
+
+    public function setSliderImageId($sliderImageId)
+    {        
+        $this->sliderImageId = $sliderImageId;
+
+        return $this;
+    }
+
+    public function getSliderImageId()
+    {
+        return $this->sliderImageId;
     }
 
     /**

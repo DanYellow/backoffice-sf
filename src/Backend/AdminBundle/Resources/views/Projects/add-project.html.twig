@@ -2,7 +2,8 @@
 
 {% import "BackendAdminBundle:Macros:menuheader.html.twig" as menuheader %}
 
-{% form_theme form "BackendAdminBundle:form:form_errors.html.twig" %}
+{% form_theme form "BackendAdminBundle:Form:fields.html.twig" %}
+{% form_theme form "BackendAdminBundle:Form:form_errors.html.twig" %}
 
 {% block titleTab %}
   {% if (app.request.attributes.get('_route') == "backend_admin_project_update") %}
@@ -70,7 +71,7 @@
                 <li class="col-md-3 col-sm-6 list-images-selected__item">
                   <button class="reset-btn" type="button" data-bind="attr: { 'data-gallery-item': JSON.stringify($data) }">&times;</button>
                     <figure>
-                      <img data-bind="attr: { src: $data.webPath }" alt="">
+                      <img data-bind="attr: { src: $data.thumb }" alt="">
                     </figure>
               </li>
              </ul>

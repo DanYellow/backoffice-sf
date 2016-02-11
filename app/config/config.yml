@@ -26,7 +26,7 @@ liip_imagine:
     filter_sets:
         cache: ~
         gallery_thumb:
-            quality: 75
+            quality: 40
             filters:
                 thumbnail: { size: [500, 300], mode: outbound }
         thumb_menu_front:
@@ -34,11 +34,16 @@ liip_imagine:
             filters:
                 thumbnail: { size: [60, 60], mode: outbound }
         select_image_front:
+            quality: 75
             filters:
                 relative_resize: { widen: 966 }
         image_slider_front:
             filters:
                 thumbnail: { size: [483, 390], mode: outbound }
+        modal_gallery_thumb:
+            quality: 50
+            filters:
+                thumbnail: { size: [221, 164], mode: outbound }
 
 
 framework:

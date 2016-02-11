@@ -78,6 +78,38 @@ class APIController extends Controller
       return new JsonResponse($projectsJSON);
     }
 
+    public function getRandomProjectAction($category) {
+      $em = $this->getDoctrine()->getManager();
+
+      $categoryId = $em->getRepository('Backend\AdminBundle\Entity\Category')->findOneBy(array('slugName' => $category));
+      $categoryId = $categoryId->getId();
+
+      $projects = $em->getRepository('Backend\AdminBundle\Entity\Project')->findBy(
+                 array('category' => $categoryId, 'isOnline' => true));
+
+      shuffle($projects);
+
+      if (count($projects) == 0) {
+        return new JsonResponse(array('error' => 'there is no project for this category'));
+      }
+
+      $project = $projects[0];
+
+      $projectJSON = array(
+                      'id'          => $project->getId(), 
+                      'name'        => $project->getTitle(),
+                      'thumb'       => $this->getThumbProject($project),
+                      'description' => $project->getDescription(), 
+                      'category'    => $project->getCategory()->getSlugName(),
+                      'images'      => implode(',', $this->getGalleryItem($project)),
+                      'online'      => true,
+                      'createdAt'   => $project->getCreatedAt()->format('Y-m-d H:i:s'),
+                      'realisedAt'  => '17/09/2013'
+                     );
+
+      return new JsonResponse($projectJSON);
+    }
+
     public function getProjectAction($id) {
       $em = $this->getDoctrine()->getManager();
 
@@ -129,9 +161,10 @@ class APIController extends Controller
       $projectsJSON = array();
       foreach ($projects as $key => $project) {
         $projectsJSON[] = array(
-                              'id'          => $project->getId(), 
-                              'imgPath'       => $this->getThumbProject($project, $filter = 'image_slider_front'),
-                              'path'    => '',
+                              'id'       => $project->getId(),
+                              'name'     => $project->getTitle(),
+                              'category' => $project->getCategory()->getSlugName(),
+                              'imgPath'  => $this->getThumbProject($project, $filter = 'image_slider_front'),
                              );
       }
 

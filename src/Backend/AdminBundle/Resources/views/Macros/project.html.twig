@@ -4,12 +4,15 @@
 
     {% set imgCompletePath = projectGalleryFirstItem.getWebPath %}
   {% endif %}
-  <li class="list-gallery__elmt {{ project.category.slugName }}" tabindex="1">
+  <li class="list-gallery__elmt {{ project.category.slugName }} {% if project.isOnline %} online {% endif %}" tabindex="1">
     <div class="list-gallery__elmt-container">
         <ul class="list-unstyled infos">
             <li>{{ project.title }}</li>
             <li>{{ project.category.name }}</li> 
             <li>{{ project.galleryItemsOrder|length }} image(s)</li>
+            {% if project.isOnline %}
+            <li class="online">En ligne</li>
+            {% endif %}
         </ul>
 
         <ul class="toolbar list-unstyled">
@@ -30,9 +33,7 @@
     </div>
 
     {% if project.galleryItemsOrder[0] is defined %}
-        {{ imgCompletePath }}
         <figure><img src="{{ imgCompletePath | imagine_filter('gallery_thumb') }}" alt="{{ projectGalleryFirstItem.path }}" /></figure>
-        }
     {% endif %}
   </li>
 {% endmacro %}

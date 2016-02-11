@@ -71,9 +71,15 @@ backend_admin_api_project:
         _method: GET
         page: \d+
 
+backend_admin_api_random_project:
+    path:     /api/rand/project/{category}
+    defaults: { _controller: BackendAdminBundle:API:getRandomProject, category: work }
+    requirements:
+        _method: GET
+
 backend_admin_api_slider:
-    path:     /api/projects/{category}
-    defaults: { _controller: BackendAdminBundle:API:getProjects, category: all }
+    path:     /api/projects/slider/{category}
+    defaults: { _controller: BackendAdminBundle:API:getSlider, category: all }
     requirements:
         _method: GET
 
