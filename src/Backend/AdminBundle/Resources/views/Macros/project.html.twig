@@ -31,9 +31,13 @@
                 >Supprimer</button></li> 
         </ul>
     </div>
-
-    {% if project.galleryItemsOrder[0] is defined %}
-        <figure><img src="{{ imgCompletePath | imagine_filter('gallery_thumb') }}" alt="{{ projectGalleryFirstItem.path }}" /></figure>
-    {% endif %}
+    <figure>
+        {# if a slider image is defined #}
+        {% if project.sliderImage is not null %}           
+             <img src="{{ project.sliderImage.getWebPath | imagine_filter('gallery_thumb') }}" alt="{{ project.sliderImage.path }}" /> 
+        {% elseif project.galleryItemsOrder[0] is defined %}
+            <img src="{{ imgCompletePath | imagine_filter('gallery_thumb') }}" alt="{{ projectGalleryFirstItem.path }}" />
+        {% endif %}
+    </figure>
   </li>
 {% endmacro %}
