@@ -210,7 +210,9 @@ class ProjectController extends Controller
     
     $form = $this->createFormBuilder($project)
         ->add('title')
-        ->add('isOnline', ProjectStateType::class)
+        ->add('isOnline', ProjectStateType::class,
+            array('data' => (int)$project->getIsOnline())
+          )
         ->add('category', EntityType::class, array(
                             'class' => 'BackendAdminBundle:Category',
                             'choice_label' => 'name',
