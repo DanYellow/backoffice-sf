@@ -24,8 +24,15 @@ class APIController extends Controller
 
     private function getThumbProject($project, $filter = 'thumb_menu_front')
     {
-      $galleryItemOrder = $project->getGalleryItemsOrder()[0];
-      $path = $galleryItemOrder->getGalleryItem()->getWebPath(); 
+      $imgSliderObj = null;
+      if ($project->getSliderImage()) {
+        $imgSliderObj = $project->getSliderImage();
+      } else {
+        $imgSliderObj = $project->getGalleryItemsOrder()[0]->getGalleryItem();
+      }
+
+      
+      $path = $imgSliderObj->getWebPath(); 
 
       return $this->get('liip_imagine.cache.manager')->getBrowserPath($path, $filter);
     }
