@@ -37,14 +37,17 @@
             <label for="{{ form.title.vars.id }}">Nom du projet</label>
             {{ form_widget(form.title) }}
         </div>
+
         <div class="form-element">
             <label for="{{ form.description.vars.id }}">Description</label>
             {{ form_widget(form.description, {'attr': {'rows': 5}}) }}
         </div>
+
         <div class="form-element">
             <label for="{{ form.category.vars.id }}">Sélectionner catégorie</label>
             {{ form_widget(form.category) }}
         </div>
+        
         <div class="form-element">
             <label for="{{ form.isOnline.vars.id }}">Mettre en ligne</label>
             {{ form_widget(form.isOnline) }}
@@ -65,15 +68,12 @@
           {{ form_widget(form.sliderImageId, { 'id': 'sliderImageId'  }) }}
         </div>
 
-
-
         <div class="form-element">
           <label for="image-slider">Sélectionner image(s) du projet</label>
           <button type="button" class="btn-select-images" data-toggle="modal" data-target="#galleryModal">
             Sélectionner images
           </button>
         </div>
-
 
         <div class="form-element list-images-selected__container" data-bind="with: projectImagesModal">
             <div data-bind="visible: projectImages().length == 0" class="empty-message__container">
