@@ -296,6 +296,8 @@ class ProjectController extends Controller
         if ($sliderImage) {
           $project->setSliderImage($sliderImage);
         }
+      } else {
+        $project->setSliderImage(null);
       }
  
       $em->persist($project);
