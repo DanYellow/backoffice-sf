@@ -1,6 +1,6 @@
 {% macro galleryelmt(galleryItem) %}
 {% set imgCompletePath = app.request.scheme ~ '://' ~ app.request.host ~ ':' ~ app.request.port ~ '/' ~ galleryItem.getWebPath %}
-  <li class="list-gallery__elmt" tabindex="1">
+  <li class="list-gallery__elmt" tabindex="1" title="{{ galleryItem.name }}">
     <div class="list-gallery__elmt-container">
         <ul class="toolbar list-unstyled">
             <li>

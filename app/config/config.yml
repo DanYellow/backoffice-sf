@@ -78,7 +78,7 @@ twig:
         website_name: "caroleoreb.fr"
         website_url: "http://www.caroleoreb.fr"
         website_url_full_path: "http://www.caroleoreb.fr"
-        
+
 # Doctrine Configuration
 doctrine:
     dbal:

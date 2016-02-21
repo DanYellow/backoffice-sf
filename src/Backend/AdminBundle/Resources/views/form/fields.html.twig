@@ -9,3 +9,20 @@
       </div>
   {% endspaceless %}
 {% endblock %}
+
+
+{% block project_state_widget %}
+  {% spaceless %}
+    {% if expanded %}
+      {% for child in form %}
+        <div class="input-radio-container">
+          {{ form_widget(child) }}
+          {{ form_label(child) }}
+        </div>
+      {% endfor %}
+    {% else %}
+      {# just let the choice widget render the select tag #}
+      {{ block('choice_widget') }}
+    {% endif %}
+  {% endspaceless %}
+{% endblock %}

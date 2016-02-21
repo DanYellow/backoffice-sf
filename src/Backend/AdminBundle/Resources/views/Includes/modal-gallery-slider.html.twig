@@ -1,20 +1,19 @@
-<div class="modal fade" id="galleryModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-bind="with: projectImagesModal">
+<div class="modal fade" id="gallerySliderModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-bind="with: sliderImageModal">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <div class="modal-header__top">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
           <h4 class="modal-title">Bibliothèque d'images</h4>
-          <span class="sub-text">Veuillez sélectionner une ou plusieurs images</span>
+          <span class="sub-text">Veuillez sélectionner une image pour le slider</span>
         </div>
         
         <form class="search__container">
           <p>Rechercher par nom</p>
           <div class="search-gallery-item-input__container">
-            <input  type="text" 
-                    placeholder="Nom du fichier" 
-                    id="gallerySearchInput" 
-                    data-bind="textInput: searchTyped, valueUpdate:'keyup'" />
+            <input type="text" placeholder="Nom du fichier" 
+                   id="gallerySliderSearchInput" 
+                   data-bind="textInput: searchTyped, valueUpdate:'keyup'" autofocus/>
             <button type="reset" 
                     class="btn-reset-form reset-btn" 
                     data-bind="visible: searchTyped"><span aria-hidden="true">&times;</span></button>
@@ -32,7 +31,7 @@
             data-img-key="thumb"
             data-search-fields="name, path"
             data-search-type="contains"
-            data-modal-project-images>
+            data-modal-slider-image>
             <li class="col-md-4 col-sm-6 gallery-library__item" data-bind="attr: { 'class': 'col-md-4 col-sm-6 gallery-library__item col-lg-' + $parent.classItems() }">
               <button class="reset-btn" type="button" data-bind="attr: { 'data-gallery-item': JSON.stringify($data), title: name }">
                 <figure>

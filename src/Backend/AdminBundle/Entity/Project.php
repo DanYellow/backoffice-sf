@@ -46,7 +46,8 @@ class Project
     /**
      * @var string
      *
-     * @ORM\Column(name="title", type="string", length=100, nullable=true)
+     * @ORM\Column(name="title", type="string", length=100, nullable=false)
+     * @Assert\NotBlank(message = "Veuillez entrer un titre")
      */
     private $title;
 
@@ -63,6 +64,13 @@ class Project
      * @ORM\OrderBy({"orderInProject" = "ASC"})
      */
     private $galleryItemsOrder;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="GalleryItem")
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $sliderImage;
+
 
     /**
      * @ORM\ManyToOne(targetEntity="Category", inversedBy="projects")
@@ -282,5 +290,29 @@ class Project
     public function getGalleryItemsOrder()
     {
         return $this->galleryItemsOrder;
+    }
+
+    /**
+     * Set sliderImage
+     *
+     * @param \Backend\AdminBundle\Entity\GalleryItem $sliderImage
+     *
+     * @return Project
+     */
+    public function setSliderImage(\Backend\AdminBundle\Entity\GalleryItem $sliderImage = null)
+    {
+        $this->sliderImage = $sliderImage;
+
+        return $this;
+    }
+
+    /**
+     * Get sliderImage
+     *
+     * @return \Backend\AdminBundle\Entity\GalleryItem
+     */
+    public function getSliderImage()
+    {
+        return $this->sliderImage;
     }
 }

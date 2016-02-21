@@ -42,6 +42,7 @@ class GalleryItem
      * @var string
      *
      * @ORM\Column(name="path", type="string", length=255)
+     * 
      */
     private $path;
 
@@ -55,10 +56,13 @@ class GalleryItem
     /**
      * 
      * @Assert\Image(
-     *          mimeTypes={"image/jpeg", "image/jpg", "image/png", "image/gif"},
-     *          mimeTypesMessage= "Ce format n'est pas autorisé. Seul les images au format .jp(e)g, .png et .gif sont autorisés",
+     *          mimeTypes = {"image/jpeg", "image/jpg", "image/png", "image/gif"},
+     *          mimeTypesMessage = "Ce format n'est pas autorisé. Seul les images au format .jp(e)g, .png et .gif sont autorisés",
      *          maxSize = "6M", 
      *          maxSizeMessage = "Ce fichier est trop lourd ({{ size }}). La taille maximum autorisée est de : {{ limit }}"
+     * )
+     * @Assert\NotBlank(
+     *     message = "Veuillez sélectionner une image"
      * )
      */
     private $file;

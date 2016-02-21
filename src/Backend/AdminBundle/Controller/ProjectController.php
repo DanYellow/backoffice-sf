@@ -34,7 +34,6 @@ use Backend\AdminBundle\Form\Type\ProjectStateType;
 
 class ProjectController extends Controller
 {
-
   private $itemsPerPage = 16;
 
   private function getThumbModal($galleryItem)
@@ -73,6 +72,15 @@ class ProjectController extends Controller
     }
     
     return implode(",", $ids);
+  }
+
+  private function getSliderImageId($project) {
+    $sliderImage = $project->getSliderImage();
+    if ($sliderImage) {
+      return $sliderImage->getId();
+    } else {
+      return "";
+    }
   }
 
 
@@ -128,10 +136,13 @@ class ProjectController extends Controller
                             'choice_label' => 'name',
                         ))
         ->add('description')
-        ->add('galleryItemsId', HiddenType::class, 
+        ->add('sliderImageId', TextType::class, 
                 array('attr' => array(
-                  'id' => 'perojectImagesId'
+                    'class' => 'hidden-input',
+                    'data-toggle' => 'modal',
+                    'data-target' => '#gallerySliderModal',
                 )))
+        ->add('galleryItemsId', HiddenType::class)
         ->add('save', SubmitType::class,
                     array('label' => 'Ajouter')
                     )
@@ -157,6 +168,14 @@ class ProjectController extends Controller
         $em->flush();
       }
 
+      if ($project->getSliderImageId()) {
+        $idSlider = $project->getSliderImageId();
+        $sliderImage = $em->find('Backend\AdminBundle\Entity\GalleryItem', $idSlider);
+        if ($sliderImage) {
+          $project->setSliderImage($sliderImage);
+        }
+      }
+      
       $em->persist($project);
       $em->flush();
 
@@ -197,9 +216,15 @@ class ProjectController extends Controller
                             'choice_label' => 'name',
                         ))
         ->add('description')
+        ->add('sliderImageId', TextType::class, 
+                array('attr' => array(
+                    'class' => 'hidden-input',
+                    'data-toggle' => 'modal',
+                    'data-target' => '#gallerySliderModal',
+                    'value' => $this->getSliderImageId($project)
+                )))
         ->add('galleryItemsId', HiddenType::class, 
                 array('attr' => array(
-                  'id' => "projectImagesId",
                   'value' => $this->getGalleryItemId($project)
                 )))
         ->add('save', SubmitType::class,
@@ -262,8 +287,15 @@ class ProjectController extends Controller
         $em->remove($galleryItemOrder);
         $em->flush();
       }
+
+      if ($project->getSliderImageId()) {
+        $idSlider = $project->getSliderImageId();
+        $sliderImage = $em->find('Backend\AdminBundle\Entity\GalleryItem', $idSlider);
+        if ($sliderImage) {
+          $project->setSliderImage($sliderImage);
+        }
+      }
  
-      
       $em->persist($project);
       $em->flush();
 

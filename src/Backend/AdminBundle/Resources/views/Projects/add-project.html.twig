@@ -27,8 +27,6 @@
 
 {% block main %}
   <div class="row">
-  
-
     <form method="post" {{ form_enctype(form) }} class="col-xs-12" novalidate="novalidate" 
           action={{ (app.request.attributes.get('_route') == "backend_admin_project_update") ? path('backend_admin_project_update', { 'id': app.request.attributes.get('id') }) : path('backend_admin_project_add') }}>
         {{ form_widget(form._token) }}
@@ -51,14 +49,33 @@
             <label for="{{ form.isOnline.vars.id }}">Mettre en ligne</label>
             {{ form_widget(form.isOnline) }}
         </div> 
-        <div class="form-element">
-            <button type="button" class="btn-select-images" data-toggle="modal" data-target="#galleryModal">
-           Sélectionner images
-           </button>
+
+        <div class="form-element" data-bind="with: sliderImageModal">
+          <label for="sliderImageId">Sélectionner image du slider |
+           <button class="reset-btn delete-btn" type="button" data-bind="visible: sliderImage()" data-delete-sliderimg>&times; Supprimer image</button>
+          </label>
+          <button class="image-slider" type="button" 
+                  data-target="#gallerySliderModal" data-toggle="modal" 
+                  data-hidden-input-slider-id="#sliderImageId">
+            <figure>
+              <img data-bind="attr: { src: sliderImage() ? sliderImage().thumb : null, 
+                                      alt: sliderImage() ? sliderImage().name : null }, visible: sliderImage()" alt="">
+            </figure>
+          </button>
+          {{ form_widget(form.sliderImageId, { 'id': 'sliderImageId'  }) }}
         </div>
 
 
-        <div class="form-element list-images-selected__container">
+
+        <div class="form-element">
+          <label for="image-slider">Sélectionner image(s) du projet</label>
+          <button type="button" class="btn-select-images" data-toggle="modal" data-target="#galleryModal">
+            Sélectionner images
+          </button>
+        </div>
+
+
+        <div class="form-element list-images-selected__container" data-bind="with: projectImagesModal">
             <div data-bind="visible: projectImages().length == 0" class="empty-message__container">
                 <span class="empty-message">
                     Il n'y a pas d'images pour ce projet
@@ -83,5 +100,6 @@
         </div>
     </form>
   </div>
-  {% include "BackendAdminBundle:Includes:modal-gallery.html.twig" %} 
+  {% include "BackendAdminBundle:Includes:modal-gallery.html.twig" %}
+  {% include "BackendAdminBundle:Includes:modal-gallery-slider.html.twig" %}
 {% endblock %}
